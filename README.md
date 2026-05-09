@@ -1,7 +1,5 @@
 # CSCE2211 Assignment 3 — Dijkstra & Floyd–Warshall
 
-# CSCE2211 Assignment 3 — Dijkstra & Floyd–Warshall
-
 **Name:** Jana Fawzi  
 **Student ID:** 900241258
 **Section:** 01 
