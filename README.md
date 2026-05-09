@@ -1,68 +1,96 @@
-<h2 align="center">CSCE 2211 Fall 2025 Applied Data Structures</h2>
-<h3 align="center">Assignment #5</h3>
+# CSCE2211 Assignment 3 — Dijkstra & Floyd–Warshall
 
-> [!IMPORTANT]  
-> Avoid deduction by writing your name, section number, and ID in a comment at the beginning of each file, then push your changes. 📝
+## Project Description
 
-<table border="0">
- <tr>
-    <td><b style="font-size:20px">📋 Prerequisites for the Assignment</b></td>
-    <td><b style="font-size:20px">🛠️ How It Works (Testing Cases)</b></td>
- </tr>
- <tr>
-    <td>
-    1. Create a <a href="https://account.jetbrains.com/login" target="_blank">JetBrains Account</a> & apply for the student pack. 🎓<br>    
-    2. Download <a href="https://www.jetbrains.com/clion/download/#section=mac" target="_blank">CLion for Windows & Mac</a> and sign in with your account. 💻<br>    
-    3. Sign in to the GitHub Desktop app on your PC. 🔗<br>  
-    4. Clone this repository to start working on the assignment. 📂<br>
-    5. Write your name and ID in a comment at the beginning of each file, then push your changes. 📝<br>
-    </td>
-    <td>
-    1. Open the repo folder as a project in CLion IDE. 🚀<br> 
-    2. Start writing your code in the <strong>Code_library</strong> directory. 🖊️<br>
-    3. After completing the required parts, go to <strong>Google_tests</strong> and run <strong>TestBTree</strong> to test your code. 🧪<br>
-    4. The test suite files will show which tests have passed and which have failed. ✅❌<br>
-    </td>
- </tr>
-</table>
+This project implements shortest path algorithms in C++ for a weighted directed graph:
 
-> [!WARNING]
-> - Your submission time affects the assignment grade; pay attention to your deadlines.
-> - You must commit and push your code to GitHub at the end of each change.
+- **Dijkstra's Algorithm** — Single-source shortest path using a min-heap priority queue
+- **Repeated Dijkstra** — All-pairs shortest path by running Dijkstra from every node
+- **Floyd–Warshall Algorithm** — All-pairs shortest path using dynamic programming
+
+The graph is loaded from a text file (`Code_library/graph.txt`) with 100 nodes and 9900 edges. All implementations are validated using Google Test.
 
 ---
 
-## 🔍 Overview of the Exercise
-In this exercise, you will implement a **Dijkstra + Floyd–Warshall** in C++.  
+## Project Structure
 
-
-You will:
-1. Load a weighted directed graph from a text file.
-2. Implement Dijkstra and Floyd–Warshall inside the provided function skeletons.
-3. Call Dijkstra repeatedly (one run per node) to produce an All-Pairs Shortest Path (APSP) output.
-4. Verify correctness of outputs using provided GoogleTest testcases
-
----
-
-## 🧪 Testing Your Code
-- Run the tests (Google_tests/Testcases.cpp).
-- Ensure all unit tests pass before submission.
-
----
-
-### 📬 Submission Instructions
-- Comment your code and document any assumptions you made.
-- Do not leave `TODO` sections empty.
-- Ensure your program compiles and runs correctly in CLion.
-- Push your final solution to GitHub before the deadline.
+```
+CSCE2211_assign3project/
+├── Code_library/
+│   ├── dijkstra_floyd.cpp   # Implementation of all three algorithms
+│   ├── graph.cpp            # Graph loading (adjacency list + matrix)
+│   ├── graph.h
+│   ├── dijkstra.h
+│   ├── floyd.h
+│   └── graph.txt            # Input graph data
+├── Google_tests/
+│   ├── Testcases.cpp        # Google Test test cases
+│   ├── CMakeLists.txt
+│   └── lib/                 # Google Test & Google Mock libraries
+├── main.cpp
+├── CMakeLists.txt
+└── README.md
+```
 
 ---
 
-📝 To-Do List
-- [ ] Implement `dijkstra(int src)`.
-- [ ] Implement `repeatedDijkstra() `.
-- [ ] Implement `floydWarshall()`.
-- [ ] Run all test cases successfully.
-- [ ] Commit and push your code regularly to GitHub.
+## How to Build
 
-:white_check_mark: Use `git status` to list all new or modified files that haven’t yet been committed.
+### Prerequisites
+- [CMake](https://cmake.org/download/) (version 3.24+)
+- [MinGW (g++ 15+)](https://github.com/niXman/mingw-builds-binaries/releases) with `C:\mingw64\bin` added to PATH
+
+### Build Steps
+
+Open a terminal in the project root folder and run:
+
+```powershell
+mkdir build
+cd build
+cmake .. -G "MinGW Makefiles"
+cmake --build .
+```
+
+---
+
+## How to Run Tests
+
+After building, from inside the `build` folder run:
+
+```powershell
+.\Google_tests\Google_Tests_run.exe
+```
+
+### Expected Output
+
+```
+[==========] Running 3 tests from 3 test suites.
+[ RUN      ] GraphLoadTest.LoadsCorrectNodeEdgeCount
+[       OK ] GraphLoadTest.LoadsCorrectNodeEdgeCount
+[ RUN      ] DijkstraTest.SingleSource
+[       OK ] DijkstraTest.SingleSource
+[ RUN      ] CompareAlgorithms.DijkstraVsFloyd
+[       OK ] CompareAlgorithms.DijkstraVsFloyd
+[  PASSED  ] 3 tests.
+```
+
+---
+
+## Algorithm Details
+
+### Dijkstra's Algorithm
+Uses a min-heap priority queue to greedily relax edges. Time complexity: **O((V + E) log V)**.
+
+### Repeated Dijkstra
+Runs Dijkstra from every node 0 to n-1 to produce a full all-pairs shortest path matrix. Time complexity: **O(V · (V + E) log V)**.
+
+### Floyd–Warshall
+Triple nested loop over intermediate nodes k, source i, and destination j. Time complexity: **O(V³)**. Uses the adjacency matrix as input.
+
+---
+
+## Notes
+- The graph is directed and weighted.
+- Infinity is represented as `1e9` (one billion).
+- An overflow guard is used in Floyd–Warshall to avoid integer overflow when summing two infinity values.
+- All three test cases pass successfully with the provided graph.
